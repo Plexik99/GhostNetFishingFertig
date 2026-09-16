@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{teile :: kopf(${meineAnsicht ? 'Meine Bergungen' : (verscholleneAnsicht ? 'Verschollene Netze' : 'Offene Netze')})}"></head>
+<body>
+<header th:replace="~{teile :: navigation}"></header>
+<main id="inhalt">
+    <div th:replace="~{teile :: nachrichten}"></div>
+    <h1 th:text="${meineAnsicht ? 'Meine Bergungen' : (verscholleneAnsicht ? 'Verschollene Netze' : 'Offene Netze')}">Offene Netze</h1>
+    <p th:if="${!meineAnsicht && !verscholleneAnsicht}">Hier stehen gemeldete Netze und bereits übernommene Bergungen. Über die Details kannst du eine freie Bergung übernehmen oder ein Netz als nicht mehr auffindbar melden.</p>
+    <p th:if="${meineAnsicht}">Hier stehen deine übernommenen, abgeschlossenen und gegebenenfalls verschollenen Bergungen.</p>
+    <p th:if="${verscholleneAnsicht}">Diese Netze wurden am gemeldeten Standort nicht mehr gefunden. Sie werden nicht als geborgen gezählt.</p>
+    <p class="kasten" th:if="${#lists.isEmpty(netze)}">In dieser Übersicht sind noch keine Netze eingetragen.</p>
+    <div class="tabelle" th:unless="${#lists.isEmpty(netze)}" tabindex="0" role="region" aria-label="Netzübersicht">
+        <table>
+            <caption th:text="${meineAnsicht ? 'Deine Bergungen' : (verscholleneAnsicht ? 'Nicht mehr auffindbare Netze' : 'Noch ausstehende Bergungen')}"></caption>
+            <thead><tr><th scope="col">Netz</th><th scope="col">Standort (Breite / Länge)</th><th scope="col">Fläche</th><th scope="col">Status</th><th scope="col">Aktion</th></tr></thead>
+            <tbody>
+            <tr th:each="netz : ${netze}">
+                <td th:text="'#' + ${netz.id}"></td>
+                <td><span th:text="${netz.breitengrad}"></span> / <span th:text="${netz.laengengrad}"></span></td>
+                <td th:text="${netz.groesseInQuadratmetern} + ' m²'"></td>
+                <td th:text="${netz.status.bezeichnung}"></td>
+                <td><a th:href="@{/netze/{id}(id=${netz.id})}" th:aria-label="'Details zu Netz ' + ${netz.id}">Details</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <p><a th:href="@{/netze/melden}">Neues Netz melden</a></p>
+</main>
+<footer th:replace="~{teile :: fuss}"></footer>
+</body>
+</html>

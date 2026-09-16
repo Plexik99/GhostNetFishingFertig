@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{teile :: kopf('Hinweis')}"></head>
+<body>
+<header th:replace="~{teile :: navigation}"></header>
+<main id="inhalt">
+    <h1 th:text="${status == 404 ? 'Seite nicht gefunden' : 'Die Anfrage konnte nicht verarbeitet werden'}"></h1>
+    <p th:if="${status == 404}">Die angeforderte Seite oder das Netz existiert nicht.</p>
+    <p th:unless="${status == 404}">Bitte öffne die Seite erneut und prüfe deine Eingaben. Falls du länger inaktiv warst, melde dich erneut an.</p>
+    <p><a th:href="@{/}">Zur Startseite</a> · <a th:href="@{/netze}">Zu den offenen Netzen</a></p>
+</main>
+<footer th:replace="~{teile :: fuss}"></footer>
+</body>
+</html>

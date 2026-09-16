@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{teile :: kopf('Konto anlegen')}"></head>
+<body>
+<header th:replace="~{teile :: navigation}"></header>
+<main id="inhalt">
+    <h1>Konto anlegen</h1>
+    <p>Mit einem Konto kannst du Bergungen übernehmen und Netze als nicht mehr auffindbar melden. Dafür gibst du deinen Namen und deine Telefonnummer an. Alle Felder sind Pflichtfelder.</p>
+    <form th:action="@{/registrieren}" th:object="${formular}" method="post" class="eingabeformular">
+        <div class="fehler" th:if="${#fields.hasAnyErrors()}" role="alert">
+            <p>Bitte prüfe deine Eingaben:</p>
+            <ul><li th:each="meldung : ${#fields.allErrors()}" th:text="${meldung}"></li></ul>
+        </div>
+        <label for="benutzername">Benutzername</label>
+        <input id="benutzername" th:field="*{benutzername}" minlength="3" maxlength="30" pattern="[A-Za-z0-9._\-]{3,30}" autocomplete="username" required aria-describedby="benutzertipp">
+        <p id="benutzertipp" class="hinweis">3 bis 30 Zeichen: Buchstaben ohne Umlaute, Ziffern, Punkt, Unterstrich oder Bindestrich.</p>
+        <label for="name">Name</label>
+        <input id="name" th:field="*{name}" maxlength="80" autocomplete="name" required>
+        <label for="telefon">Telefonnummer</label>
+        <input id="telefon" th:field="*{telefon}" type="tel" maxlength="30" autocomplete="tel" required>
+        <label for="passwort">Passwort</label>
+        <input id="passwort" name="passwort" type="password" minlength="8" maxlength="64" autocomplete="new-password" required aria-describedby="passworttipp">
+        <p id="passworttipp" class="hinweis">8 bis 64 Zeichen. Bei vielen Sonderzeichen kann die zulässige Länge kürzer sein.</p>
+        <label for="passwortWiederholung">Passwort wiederholen</label>
+        <input id="passwortWiederholung" name="passwortWiederholung" type="password" minlength="8" maxlength="64" autocomplete="new-password" required>
+        <button type="submit">Konto anlegen</button>
+    </form>
+    <p><a th:href="@{/anmelden}">Zur Anmeldung</a></p>
+</main>
+<footer th:replace="~{teile :: fuss}"></footer>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="kopf(titel)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${titel} + ' | Ghost Net Fishing'">Ghost Net Fishing</title>
+    <link rel="icon" th:href="@{/favicon.svg}" type="image/svg+xml">
+    <link rel="stylesheet" th:href="@{/css/stil.css}">
+</head>
+<body>
+<header th:fragment="navigation">
+    <a class="sprunglink" href="#inhalt">Zum Inhalt</a>
+    <div class="kopfzeile">
+        <a class="projektname" th:href="@{/}">Ghost Net Fishing</a>
+        <span>Geisternetze melden und Bergungen organisieren</span>
+    </div>
+    <nav aria-label="Hauptnavigation">
+        <a th:href="@{/}">Start</a>
+        <a th:href="@{/netze/melden}">Netz melden</a>
+        <a th:href="@{/netze}">Offene Netze</a>
+        <a th:href="@{/verschollene-netze}">Verschollene Netze</a>
+        <a th:if="${angemeldeterName == null}" th:href="@{/anmelden}">Anmelden</a>
+        <a th:if="${angemeldeterName != null}" th:href="@{/meine-bergungen}">Meine Bergungen</a>
+        <form th:if="${angemeldeterName != null}" th:action="@{/abmelden}" method="post" class="abmelden">
+            <span th:text="${angemeldeterName}">Benutzername</span>
+            <button type="submit">Abmelden</button>
+        </form>
+    </nav>
+</header>
+<div th:fragment="nachrichten" aria-live="polite">
+    <p class="erfolg" th:if="${erfolg}" th:text="${erfolg}"></p>
+    <p class="fehler" th:if="${fehler}" th:text="${fehler}"></p>
+</div>
+<footer th:fragment="fuss">
+    <p>Ghost Net Fishing · Studienprojekt IPWA02-01</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{teile :: kopf('Netzdetails')}"></head>
+<body>
+<header th:replace="~{teile :: navigation}"></header>
+<main id="inhalt">
+    <div th:replace="~{teile :: nachrichten}"></div>
+    <h1 th:text="'Netz #' + ${netz.id}"></h1>
+    <dl class="netzdetails">
+        <dt>Status</dt><dd th:text="${netz.status.bezeichnung}"></dd>
+        <dt>Breitengrad</dt><dd th:text="${netz.breitengrad}"></dd>
+        <dt>Längengrad</dt><dd th:text="${netz.laengengrad}"></dd>
+        <dt>Geschätzte Netzfläche</dt><dd th:text="${netz.groesseInQuadratmetern} + ' m²'"></dd>
+        <dt>Gemeldet am</dt><dd th:text="${#temporals.format(netz.gemeldetAm, 'dd.MM.yyyy HH:mm')}"></dd>
+        <dt th:if="${netz.geborgenAm != null}">Geborgen am</dt><dd th:if="${netz.geborgenAm != null}" th:text="${#temporals.format(netz.geborgenAm, 'dd.MM.yyyy HH:mm')}"></dd>
+        <dt th:if="${netz.verschollenAm != null}">Verschollen gemeldet am</dt><dd th:if="${netz.verschollenAm != null}" th:text="${#temporals.format(netz.verschollenAm, 'dd.MM.yyyy HH:mm')}"></dd>
+        <dt>Meldung</dt><dd th:text="${netz.melderName == null ? 'Anonym' : 'Mit Kontaktdaten'}"></dd>
+        <dt>Bergung</dt><dd th:text="${zustaendig ? 'Dir zugeordnet' : (netz.bergendePerson == null ? 'Noch nicht zugeordnet' : 'Bereits einer Person zugeordnet')}"></dd>
+    </dl>
+    <section th:if="${zustaendig && netz.melderName != null}" class="kasten">
+        <h2>Kontakt zur meldenden Person</h2>
+        <p>Name: <span th:text="${netz.melderName}"></span></p>
+        <p>Telefon: <span th:text="${netz.melderTelefon}"></span></p>
+    </section>
+    <form th:if="${uebernehmbar && angemeldeterName != null}" th:action="@{/netze/{id}/uebernehmen(id=${netz.id})}" method="post" class="aktionsformular">
+        <p>Mit dem Eintragen übernimmst du die Verantwortung für die Bergung dieses Netzes.</p>
+        <button type="submit">Bergung übernehmen</button>
+    </form>
+    <p th:if="${uebernehmbar && angemeldeterName == null}"><a th:href="@{/anmelden}">Melde dich an</a>, um die Bergung zu übernehmen. Du kannst auch zuerst <a th:href="@{/registrieren}">ein Konto anlegen</a>.</p>
+    <form th:if="${abschliessbar}" th:action="@{/netze/{id}/abschliessen(id=${netz.id})}" method="post" class="aktionsformular">
+        <p>Bestätige die Bergung erst, wenn das Netz tatsächlich geborgen wurde.</p>
+        <button type="submit">Als geborgen markieren</button>
+    </form>
+    <form th:if="${verschollenMeldbar && angemeldeterName != null}" th:action="@{/netze/{id}/verschollen(id=${netz.id})}" method="post" class="aktionsformular">
+        <h2>Netz nicht mehr auffindbar</h2>
+        <p>Bestätige dies nur, wenn du festgestellt hast, dass das Netz am gemeldeten Standort nicht auffindbar ist. Dein Konto und der Zeitpunkt werden zur Meldung gespeichert.</p>
+        <button type="submit">Als nicht mehr auffindbar melden</button>
+    </form>
+    <p th:if="${verschollenMeldbar && angemeldeterName == null}">Eine Verschollenmeldung ist nicht anonym möglich. Bitte <a th:href="@{/anmelden}">melde dich an</a>.</p>
+    <p><a th:href="@{/netze}">Offene Netze</a> · <a th:href="@{/verschollene-netze}">Verschollene Netze</a></p>
+</main>
+<footer th:replace="~{teile :: fuss}"></footer>
+</body>
+</html>
