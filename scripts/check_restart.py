@@ -10,10 +10,40 @@ import subprocess
 import tempfile
 import time
 from datetime import datetime, timezone
+from decimal import Decimal
+from html.parser import HTMLParser
 from pathlib import Path
 from urllib.error import URLError
 from urllib.parse import urlencode
 from urllib.request import HTTPCookieProcessor, ProxyHandler, build_opener
+
+
+class Detailwerte(HTMLParser):
+    """Liest die beschrifteten Werte der echten Detailansicht statt Navigationstext."""
+    def __init__(self):
+        super().__init__()
+        self.active = None
+        self.parts = []
+        self.label = None
+        self.values = {}
+
+    def handle_starttag(self, tag, attrs):
+        if tag in ('dt', 'dd'):
+            self.active = tag
+            self.parts = []
+
+    def handle_data(self, data):
+        if self.active:
+            self.parts.append(data)
+
+    def handle_endtag(self, tag):
+        if tag == self.active:
+            value = ' '.join(''.join(self.parts).split())
+            if tag == 'dt':
+                self.label = value
+            elif self.label:
+                self.values[self.label] = value
+            self.active = None
 
 
 def main():
@@ -125,7 +155,11 @@ def main():
             checks.append('Beide Konten können sich nach vollständigem Prozessneustart anmelden')
             for net, state in zip(ids, ['Geborgen', 'Verschollen', 'Gemeldet']):
                 _, content = request(a, f'/netze/{net}')
-                assert state in content and '54.180000' in content and '12.090000' in content
+                details = Detailwerte()
+                details.feed(content)
+                assert details.values.get('Status') == state, f'Falscher Status für Netz {net}'
+                assert Decimal(details.values['Breitengrad'].replace(',', '.')) == Decimal('54.18')
+                assert Decimal(details.values['Längengrad'].replace(',', '.')) == Decimal('12.09')
                 checks.append(f'Netz {net}: Status {state} und Koordinaten erhalten')
             _, own = request(a, '/meine-bergungen')
             assert all(f'href="/netze/{net}"' in own for net in ids[:2])
