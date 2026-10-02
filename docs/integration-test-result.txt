@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: de.alex.ghostnet.GhostNetIntegrationTest
+-------------------------------------------------------------------------------
+Tests run: 25, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.386 s -- in de.alex.ghostnet.GhostNetIntegrationTest

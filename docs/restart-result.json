@@ -1,0 +1,13 @@
+{
+  "success": true,
+  "utc": "2026-10-02T13:59:00.668357+00:00",
+  "checks": [
+    "Beide Konten können sich nach vollständigem Prozessneustart anmelden",
+    "Netz 1: Status Geborgen und Koordinaten erhalten",
+    "Netz 2: Status Verschollen und Koordinaten erhalten",
+    "Netz 3: Status Gemeldet und Koordinaten erhalten",
+    "Beide Zuordnungen bleiben unter Meine Bergungen erhalten",
+    "Offene Liste enthält nur das weiterhin gemeldete Netz"
+  ],
+  "scope": "HTTP, zwei getrennte Java-Prozesse, H2-Datei; keine Browserprüfung"
+}
