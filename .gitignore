@@ -1,0 +1,16 @@
+# Buildausgaben und lokale Laufzeitdaten
+/target/
+/data/
+*.mv.db
+*.trace.db
+*.lock.db
+*.log
+
+# IDE- und Betriebssystemdateien
+/.classpath
+/.project
+/.settings/
+/.idea/
+*.iml
+.DS_Store
+Thumbs.db
